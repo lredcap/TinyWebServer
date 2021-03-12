@@ -25,7 +25,7 @@ const char *error_500_form = "There was an unusual problem serving the request f
 const char *doc_root = "/home/qgy/github/TinyWebServer/root";
 
 //将表中的用户名和密码放入map
-map<string, string> users;
+map<string, string> users;//全局变量
 locker m_lock;
 
 void http_conn::initmysql_result(connection_pool *connPool)
