@@ -49,7 +49,7 @@ void connection_pool::init(string url, string User, string PassWord, string DBNa
 			cout << "Error: " << mysql_error(con);
 			exit(1);
 		}
-		connList.push_back(con);
+		connList.push_back(con);//connList内部会用new动态分配出MYSQL*节点
 		++FreeConn;
 	}
 
