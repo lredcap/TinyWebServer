@@ -28,7 +28,7 @@ const char *doc_root = "/home/qgy/github/TinyWebServer/root";
 map<string, string> users;//全局变量
 locker m_lock;
 
-void http_conn::initmysql_result(connection_pool *connPool)
+void http_conn::initmysql_result(connection_pool *connPool)//只执行一次
 {
     //先从连接池中取一个连接
     MYSQL *mysql = NULL;
@@ -419,7 +419,7 @@ http_conn::HTTP_CODE http_conn::do_request()
         free(m_url_real);
 
         //将用户名和密码提取出来
-        //user=123&passwd=123
+        //user=123&passorwd=123
         char name[100], password[100];
         int i;
         for (i = 5; m_string[i] != '&'; ++i)
@@ -448,7 +448,7 @@ http_conn::HTTP_CODE http_conn::do_request()
             {
 
                 m_lock.lock();
-                int res = mysql_query(mysql, sql_insert);
+                int res = mysql_query(mysql, sql_insert);//mysql在request处理前初始化，在threadpool.h中
                 users.insert(pair<string, string>(name, password));
                 m_lock.unlock();
 
@@ -518,7 +518,7 @@ http_conn::HTTP_CODE http_conn::do_request()
         return NO_RESOURCE;
     if (!(m_file_stat.st_mode & S_IROTH))
         return FORBIDDEN_REQUEST;
-    if (S_ISDIR(m_file_stat.st_mode))
+    if (S_ISDIR(m_file_stat.st_mode))//是否是一个目录
         return BAD_REQUEST;
     int fd = open(m_real_file, O_RDONLY);
     m_file_address = (char *)mmap(0, m_file_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
